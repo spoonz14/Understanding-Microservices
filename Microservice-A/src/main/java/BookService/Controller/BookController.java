@@ -21,7 +21,7 @@ public class BookController {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String EXTERNAL_SERVICE_URL = "http://localhost:port/api/";
+    private static final String EXTERNAL_SERVICE_URL = "http://localhost:8081/api/";
 
     public ResponseEntity<String> callExternalService() {
         ResponseEntity<String> response = restTemplate.getForEntity(EXTERNAL_SERVICE_URL, String.class);

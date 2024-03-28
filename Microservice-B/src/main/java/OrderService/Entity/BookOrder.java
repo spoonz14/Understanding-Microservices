@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Order {
+public class BookOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
