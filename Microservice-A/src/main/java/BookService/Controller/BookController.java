@@ -16,7 +16,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-@Controller
+@RestController
 public class BookController {
     @Autowired
     private RestTemplate restTemplate;
