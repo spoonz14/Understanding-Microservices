@@ -21,19 +21,23 @@ public class BookController {
     @Autowired
     private RestTemplate restTemplate;
 
+    // URL to communicate with Microservice-B aka OrderService
     private static final String EXTERNAL_SERVICE_URL = "http://localhost:8081/api/";
 
+    // Method to communicate with the external service
     public ResponseEntity<String> callExternalService() {
         ResponseEntity<String> response = restTemplate.getForEntity(EXTERNAL_SERVICE_URL, String.class);
         // Process the response from the external service
         return response;
     }
 
+    // Instantiations
     @Autowired
     private BookRepository bookRepository;
     @Autowired
     private BookService bookService;
 
+    // Post method to add a new book
     @PostMapping("/api/")
     public ResponseEntity<String> add(@RequestBody Book book) {
         if (bookService.addBook(book)) {
@@ -42,12 +46,13 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or email already exists.");
         }
     }
+    // get method to see all books
     @GetMapping("/api/")
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();
         return ResponseEntity.ok(books);
     }
-
+    // Get method to see book by title
     @GetMapping("/api/{title}")
     public ResponseEntity<String> getBookByTitle(@PathVariable String title) {
         String decodedTitle = URLDecoder.decode(title, StandardCharsets.UTF_8);
@@ -62,16 +67,9 @@ public class BookController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book not found.");
         }
-
-//        BookInfo bookInfo = bookService.lookUpBook(title);
-//        if (bookInfo != null) {
-//            String responseMessage = "Book found: " + bookInfo.getBook().getTitle() + ", Stock: " + bookInfo.getStock();
-//            return ResponseEntity.ok(responseMessage);
-//        } else {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book not found.");
-//        }
     }
 
+    // Method to update the stock number
     @PutMapping("/api/order/{title}")
     public ResponseEntity<String> placeOrder(@PathVariable String title, @RequestBody Book updatedBook) {
         String decodedTitle = URLDecoder.decode(title, StandardCharsets.UTF_8);
@@ -95,6 +93,7 @@ public class BookController {
         }
     }
 
+    // Method to update the stock number
     @PutMapping("/api/{id}")
     public ResponseEntity<String> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
         Book existingBook = bookService.findBookById(id);
@@ -111,6 +110,7 @@ public class BookController {
         return ResponseEntity.ok("Book updated.");
     }
 
+    // Method to delete book
     @DeleteMapping("/api/{id}")
     public ResponseEntity<String> deleteBook(@PathVariable Long id) {
         if (bookService.deleteBook(id)) {

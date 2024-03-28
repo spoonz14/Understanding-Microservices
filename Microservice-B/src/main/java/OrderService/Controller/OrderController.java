@@ -64,11 +64,11 @@ public class OrderController {
             String monthString = Integer.toString(month);
 
             // Return date will always be 2 weeks from time of order, therefore we are creating conditional statements to handle times where
-            // the day + 14 will exceed the amount of days in that month
+            // the currrent day value + 14 will exceed the amount of days in that month
             int day = currentTime.getDayOfMonth();
             if (month == 1|| month == 3 || month == 5 || month == 7 || month == 8 || month == 10|| month == 12) {
                 if (day <= 17) {
-                    day = day + 14;
+                    day = day + 14;  // Return time is always 2 weeks from now
                     String dayString = Integer.toString(day);
                 } else {
                     month++;
@@ -98,6 +98,7 @@ public class OrderController {
             // Getting the year for the return date
             int year = currentTime.getYear();
             String yearString = Integer.toString(year);
+            // Save the return date
             order.setReturnDate(day + "/" + month + "/" + year);
 
             orderRepository.save(order); // Save the order
