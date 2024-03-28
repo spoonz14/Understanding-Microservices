@@ -34,6 +34,11 @@ public class BookService {
         }
     }
 
+    public Book findBookByTitle(String title) {
+        Book book = bookRepository.findByTitle(title);
+        return book;
+    }
+
     public Book findBookById(Long id) {
         Optional<Book> optionalBook = bookRepository.findById(id);
         return (Book) optionalBook.orElse(null);

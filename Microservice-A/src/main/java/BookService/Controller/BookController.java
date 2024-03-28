@@ -49,20 +49,30 @@ public class BookController {
     }
 
     @GetMapping("/api/{title}")
-    public ResponseEntity<String> getBookById(@PathVariable String title) {
+    public ResponseEntity<String> getBookByTitle(@PathVariable String title) {
         String decodedTitle = URLDecoder.decode(title, StandardCharsets.UTF_8);
-        BookInfo bookInfo = bookService.lookUpBook(title);
-        if (bookInfo != null) {
-            String responseMessage = "Book found: " + bookInfo.getBook().getTitle() + ", Stock: " + bookInfo.getStock();
+        Book book = bookService.findBookByTitle(title);
+
+        if (book != null) {
+            String responseMessage = "Book found: " + book.getTitle() + ", Stock: " + book.getStock();
             return ResponseEntity.ok(responseMessage);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book not found.");
         }
+
+//        BookInfo bookInfo = bookService.lookUpBook(title);
+//        if (bookInfo != null) {
+//            String responseMessage = "Book found: " + bookInfo.getBook().getTitle() + ", Stock: " + bookInfo.getStock();
+//            return ResponseEntity.ok(responseMessage);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book not found.");
+//        }
     }
 
-    @PutMapping("/api/order/{id}")
-    public ResponseEntity<String> placeOrder(@PathVariable Long id, @RequestBody Book updatedBook) {
-        Book existingBook = bookService.findBookById(id);
+    @PutMapping("/api/order/{title}")
+    public ResponseEntity<String> placeOrder(@PathVariable String title, @RequestBody Book updatedBook) {
+        String decodedTitle = URLDecoder.decode(title, StandardCharsets.UTF_8);
+        Book existingBook = bookService.findBookByTitle(title);
         if (existingBook == null) {
             return ResponseEntity.notFound().build();
         }
