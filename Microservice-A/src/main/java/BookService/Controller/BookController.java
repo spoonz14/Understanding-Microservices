@@ -55,6 +55,9 @@ public class BookController {
 
         if (book != null) {
             String responseMessage = "Book found: " + book.getTitle() + ", Stock: " + book.getStock();
+            int stock = book.getStock();
+            stock--;
+            book.setStock(stock);
             return ResponseEntity.ok(responseMessage);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book not found.");

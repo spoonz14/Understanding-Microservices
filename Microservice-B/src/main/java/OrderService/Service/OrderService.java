@@ -1,5 +1,6 @@
 package OrderService.Service;
 
+import BookService.Entity.Book;
 import OrderService.Entity.BookOrder;
 import OrderService.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class OrderService {
         return true;
     }
 
+//    public List<Book> getAllBooks() {
+//        return orderRepository.findAll();
+//    }
     public List<BookOrder> getAllOrders() {
         return orderRepository.findAll();
     }
