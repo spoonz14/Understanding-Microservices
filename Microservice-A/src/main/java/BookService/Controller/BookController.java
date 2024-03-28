@@ -3,6 +3,7 @@ package BookService.Controller;
 
 import BookService.Entity.Book;
 import BookService.Entity.BookInfo;
+import BookService.Repository.BookRepository;
 import BookService.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Controller
 public class BookController {
+    @Autowired
+    private BookRepository bookRepository;
     @Autowired
     private BookService bookService;
 
@@ -45,21 +48,38 @@ public class BookController {
         }
     }
 
-    @PutMapping("/api/{id}")
-    public ResponseEntity<String> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
-        Book existingBook = bookService.findById(id);
-        if (existingNote == null) {
+    @PutMapping("/api/order/{id}")
+    public ResponseEntity<String> placeOrder(@PathVariable Long id, @RequestBody Book updatedBook) {
+        Book existingBook = bookService.findBookById(id);
+        if (existingBook == null) {
             return ResponseEntity.notFound().build();
         }
 
-        // Update existing note
-        existingNote.setTitle(updatedNote.getTitle());
-        existingNote.setDescription(updatedNote.getDescription());
+        int stock = existingBook.getStock();
+        stock--;
+        // Update existing book
+        existingBook.setStock(stock);
 
         // Save the changes
-        notesRepository.save(existingNote);
+        bookRepository.save(existingBook);
 
-        return ResponseEntity.ok("Note updated.");
+        return ResponseEntity.ok("Order placed.");
+    }
+
+    @PutMapping("/api/{id}")
+    public ResponseEntity<String> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+        Book existingBook = bookService.findBookById(id);
+        if (existingBook == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Update existing book
+        existingBook.setStock(updatedBook.getStock());
+
+        // Save the changes
+        bookRepository.save(existingBook);
+
+        return ResponseEntity.ok("Book updated.");
     }
 
     @DeleteMapping("/api/{id}")
