@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +18,17 @@ import java.util.List;
 
 @Controller
 public class BookController {
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private static final String EXTERNAL_SERVICE_URL = "http://localhost:port/api/";
+
+    public ResponseEntity<String> callExternalService() {
+        ResponseEntity<String> response = restTemplate.getForEntity(EXTERNAL_SERVICE_URL, String.class);
+        // Process the response from the external service
+        return response;
+    }
+    
     @Autowired
     private BookRepository bookRepository;
     @Autowired
@@ -56,14 +68,18 @@ public class BookController {
         }
 
         int stock = existingBook.getStock();
-        stock--;
-        // Update existing book
-        existingBook.setStock(stock);
+        if (stock == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book out of stock.");
+        } else {
+            stock--;
+            // Update existing book
+            existingBook.setStock(stock);
 
-        // Save the changes
-        bookRepository.save(existingBook);
+            // Save the changes
+            bookRepository.save(existingBook);
 
-        return ResponseEntity.ok("Order placed.");
+            return ResponseEntity.ok("Order placed.");
+        }
     }
 
     @PutMapping("/api/{id}")
