@@ -28,7 +28,7 @@ public class BookController {
         // Process the response from the external service
         return response;
     }
-    
+
     @Autowired
     private BookRepository bookRepository;
     @Autowired
