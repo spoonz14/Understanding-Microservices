@@ -1,6 +1,7 @@
 package BookService.Service;
 
 import BookService.Entity.Book;
+import BookService.Entity.BookInfo;
 import BookService.Repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,16 +23,22 @@ public class BookService {
         }
     }
 
-    public boolean lookUpBook(Book book) {
-        if (bookRepository.findByTitle(book.getTitle()) != null) {
-            System.out.println(book.getTitle() + " found!");
-            return true;
+    public BookInfo lookUpBook(String title) {
+        Book book = bookRepository.findByTitle(title);
+        if (book != null) {
+            int stock = book.getStock(); // fetch the stock from the Book entity
+            return new BookInfo(book, stock);
         } else {
-            return false;
+            return null;
         }
     }
 
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
+    }
+
+    public boolean deleteBook(Long id) {
+        bookRepository.deleteById(id);
+        return true;
     }
 }
