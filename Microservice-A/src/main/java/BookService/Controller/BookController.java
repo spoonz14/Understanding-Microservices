@@ -5,7 +5,6 @@ import BookService.Entity.Book;
 import BookService.Entity.BookInfo;
 import BookService.Repository.BookRepository;
 import BookService.Service.BookService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,6 @@ public class BookController {
     private BookService bookService;
 
     // Post method to add a new book
-    @ApiOperation(value = "Create a new entity", notes = "Add a new book entity to the database")
     @PostMapping("/api/")
     public ResponseEntity<String> add(@RequestBody Book book) {
         if (bookService.addBook(book)) {
@@ -49,14 +47,12 @@ public class BookController {
         }
     }
     // get method to see all books
-    @ApiOperation(value = "Get all entities", notes = "Retrieve all entities from the database")
     @GetMapping("/api/")
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();
         return ResponseEntity.ok(books);
     }
     // Get method to see book by title
-    @ApiOperation(value = "Get entities by Category", notes = "Retrieve entities based on a specific category")
     @GetMapping("/api/{title}")
     public ResponseEntity<String> getBookByTitle(@PathVariable String title) {
         String decodedTitle = URLDecoder.decode(title, StandardCharsets.UTF_8);
@@ -74,7 +70,6 @@ public class BookController {
     }
 
     // Method to update the stock number
-    @ApiOperation(value = "Update an entity", notes = "Update an existing entity in the database")
     @PutMapping("/api/order/{title}")
     public ResponseEntity<String> placeOrder(@PathVariable String title, @RequestBody Book updatedBook) {
         String decodedTitle = URLDecoder.decode(title, StandardCharsets.UTF_8);
@@ -99,7 +94,6 @@ public class BookController {
     }
 
     // Method to update the stock number
-    @ApiOperation(value = "Update an entity", notes = "Update an existing entity in the database")
     @PutMapping("/api/{id}")
     public ResponseEntity<String> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
         Book existingBook = bookService.findBookById(id);
@@ -117,7 +111,6 @@ public class BookController {
     }
 
     // Method to delete book
-    @ApiOperation(value = "Delete an entity", notes = "Delete an existing entity from the database")
     @DeleteMapping("/api/{id}")
     public ResponseEntity<String> deleteBook(@PathVariable Long id) {
         if (bookService.deleteBook(id)) {
